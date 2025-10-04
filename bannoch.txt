@@ -55,13 +55,15 @@ When you first run the game, you'll see the following:
     
 The final question "What do you want to do now?" comes after most room
 descriptions in the game, and you need to give one of the following
-eight answers:
+eight commands:
 
   - N  (go north)
   - S  (go south, the answer you must give to the first frame, shown
         above)
   - E  (go east)
   - W  (go west)
+  - L  (see the room description again)
+  - ?  (help text abound commands)
   - F  (fight -- this is one of the two possible answers you can give
         when confronted by a monster)
   - FL (flee -- this is the other answer, and it is not always
@@ -110,8 +112,6 @@ so many years ago to protect it.
 
 Note that once you enter the castle, there is no way out but through.
 You cannot leave again by the front entrance, so there is no room for
-second thoughts.  All input must be in upper case, so you must ensure
-your computer is working in upper case before running the game, or
-all your precious input will be ignored.
+second thoughts.
 
 Good luck, and may the Guardian fall to your mighty powers.
