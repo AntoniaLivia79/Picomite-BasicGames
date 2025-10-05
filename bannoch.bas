@@ -1,6 +1,9 @@
-' The Bannochburn Legacy
-' Created by Tim Hartnell
-' Refactored for MM Basic and Picomite Basic
+' The Bannochburn Legacy - MMBasic Version
+' Original BASIC Game by Tim Hartnell
+
+Mode 2
+
+COLOR RGB(GREEN)
 
 Dim B$(12), MSTR$(6), M(7), S(7), W(7)
 
@@ -21,7 +24,7 @@ MainLoop:
   GoSub PauseRoutine
   GoSub RoomDescriptions
   GoSub CheckEncounters
-  If QV > 0 Then GoSub PressAnyKey
+  If QV > 0 Then GoSub PressEnter
   If Z > 1 Then If Rnd > .5 Then GoSub Contents
   GoSub PauseRoutine
   GoSub Action
@@ -33,7 +36,7 @@ MeleeResolution:
   ' Melee resolution
   ROLL = Int(Rnd * 6) + 1
   VICTORY = 0
-  If (DIFF < 0 And ROLL > Abs(DIFF)) Or (DIFF > 0 And ROLL <= DIFF) Or (DIFF = 0 And ROLL < 4) Then VICTORY = 1
+  If (DIFF < 0 And ROLL > Abs(DIFF)) Or (DIFF > 0 And ROLL <= DIFF) Or (DIFF   = 0 And ROLL < 4) Then VICTORY = 1
   GoSub PauseRoutine
   Return
 
@@ -41,11 +44,14 @@ MeleeResolution:
 MonsterSubroutine:
   ' Monster subroutine
   If QV = 0 Then Return
+  Print
+  COLOR RGB(YELLOW)
   If QV = 1 Then GoSub Monster1
   If QV = 2 Then GoSub Monster2
   If QV = 3 Then GoSub Monster3
   If QV = 4 Then GoSub Monster4
   If QV = 5 Then GoSub Monster5
+  COLOR RGB(GREEN)
   GoSub PauseRoutine
   Return
 
@@ -159,11 +165,16 @@ UltimateTest:
   K = M(6) + M(7)
   COST = Int(Rnd * K) + 1
   Print : Print "This round carries a penalty"
-  Print "of"; COST; "attribute points": GoSub PauseRoutine
+  Print "of"; COST; "attribute points"
+  GoSub PauseRoutine
   GoSub FightEffects
   DIFF = M(7) - M(6)
-  While DIFF > 5 : DIFF = DIFF - 6 : Wend
-  While DIFF < -5 : DIFF = DIFF + 6 : Wend
+  Do
+    DIFF = DIFF - 6
+  Loop Until DIFF <= 5
+  Do
+    DIFF = DIFF + 6
+  Loop Until DIFF >= -5
   GoSub MeleeResolution
   If VICTORY = 1 Then
     M(7) = M(7) + COST
@@ -173,7 +184,7 @@ UltimateTest:
     Print "And you lost...and so"
   EndIf
   If M(7) < 1 Then M(7) = 0
-  Print "now have"; M(7); "magic points..."
+  Print "now have"; M(7); " magic points..."
   GoSub PauseRoutine
   Print "Press RETURN when you're ready"
   Input "to continue this epic struggle"; E$
@@ -195,8 +206,12 @@ UltimateTest:
   Print "of"; COST; "attribute points": GoSub PauseRoutine
   GoSub FightEffects
   DIFF = S(7) - S(6)
-  While DIFF > 5 : DIFF = DIFF - 6 : Wend
-  While DIFF < -5 : DIFF = DIFF + 6 : Wend
+  Do
+    DIFF = DIFF - 6
+  Loop Until DIFF <= 5
+  Do
+    DIFF = DIFF + 6
+  Loop Until DIFF >= -5
   GoSub MeleeResolution
   If VICTORY = 1 Then
     S(7) = S(7) + COST
@@ -206,7 +221,7 @@ UltimateTest:
     Print "You're the loser, and so"
   EndIf
   If S(7) < 0 Then S(7) = 0
-  Print "you now have"; S(7); "strength points"
+  Print "you now have"; S(7); " strength points"
   GoSub PauseRoutine
   Print : Print "Press the RETURN key when"
   Print "you have stopped trembling"
@@ -229,10 +244,15 @@ UltimateTest:
   COST = Int(Rnd * K) + 1
   Print "Now, this final challenge"
   Print "carries a huge penalty"
-  Print "of"; COST; "attribute points": GoSub PauseRoutine
+  Print "of"; COST; "attribute points"
+  GoSub PauseRoutine
   DIFF = W(7) - W(6)
-  While DIFF > 5 : DIFF = DIFF - 6 : Wend
-  While DIFF < -5 : DIFF = DIFF + 6 : Wend
+  Do
+    DIFF = DIFF - 6
+  Loop Until DIFF <= 5
+  Do
+    DIFF = DIFF + 6
+  Loop Until DIFF >= -5
   GoSub MeleeResolution
   GoSub FightEffects
   If VICTORY = 1 Then
@@ -266,8 +286,8 @@ UltimateTest:
     Cls : Print
     Print "You've succeeded, O hero of"
     Print "these dark and dangerous"
-    Print "times. I hereby dub thee"
-    Print "Sir "; N$; ".... Arise..."
+    Print "times. The curse of"
+    Print "Bannochburn Castle is lifted."
     End
   Else
     Print "Unfortunately, you did not"
@@ -277,7 +297,9 @@ UltimateTest:
     Print "of the Guardian....": GoSub PauseRoutine
     Print "You fought valiantly, but will"
     Print "now be consumed......"
-    GoSub PauseRoutine: GoSub FightEffects: GoSub FightEffects: End
+    GoSub PauseRoutine
+    GoSub FightEffects
+    End
   EndIf
 
 ' *******************************
@@ -287,9 +309,10 @@ ActionLoop:
   D = 4
   If Mid$(B$(Z), 9, 1) = "0" Or Mid$(B$(Z), 9, 1) = " " Then
     D = 1
-    If Rnd > .8 And Z > 1 Then GoSub Contents: GoTo ActionLoop
+    If Rnd > .8 And Z > 1 Then GoSub Contents : GoTo ActionLoop
   EndIf
 
+  Print
   Print "What do you want to do now";
   Input ZSTR$
   If ZSTR$ = "?" Then 
@@ -308,10 +331,10 @@ ActionLoop:
   EndIf
 
   If UCase$(Left$(ZSTR$, 1)) = "F" Then GoTo Fight
-  If UCase$(ZSTR$) = "N" And Left$(B$(Z), 2) = "00" Then Print , "No exit": GoTo ActionLoop
-  If UCase$(ZSTR$) = "S" And Mid$(B$(Z), 3, 2) = "00" Then Print "There is no door that way": GoTo ActionLoop
-  If UCase$(ZSTR$) = "E" And Mid$(B$(Z), 5, 2) = "00" Then Print "That is not possible": GoTo ActionLoop
-  If UCase$(ZSTR$) = "W" And Mid$(B$(Z), 7, 2) = "00" Then Print "You can't walk through walls!": GoTo ActionLoop
+  If UCase$(ZSTR$) = "N" And Left$(B$(Z), 2) = "00" Then Print , "No exit":   GoTo ActionLoop
+  If UCase$(ZSTR$) = "S" And Mid$(B$(Z), 3, 2) = "00" Then Print "There is   no door that way": GoTo ActionLoop
+  If UCase$(ZSTR$) = "E" And Mid$(B$(Z), 5, 2) = "00" Then Print "That is   not possible": GoTo ActionLoop
+  If UCase$(ZSTR$) = "W" And Mid$(B$(Z), 7, 2) = "00" Then Print "You can't   walk through walls!": GoTo ActionLoop
   If UCase$(ZSTR$) = "L" Then GoSub RoomDescriptions : GoTo ActionLoop
   If UCase$(ZSTR$) = "N" Then Z = Val(Left$(B$(Z), 2)): Return
   If UCase$(ZSTR$) = "S" Then Z = Val(Mid$(B$(Z), 3, 2)): Return
@@ -321,7 +344,7 @@ ActionLoop:
   If UCase$(Left$(ZSTR$, 1)) <> "F" Then Return
 
 Fight:
-  If Mid$(B$(Z), 9, 1) = "0" Then Print "There is nothing to fight against": GoTo ActionLoop
+  If Mid$(B$(Z), 9, 1) = "0" Then Print "There is nothing to fight against":   GoTo ActionLoop
   If UCase$(ZSTR$) = "FL" Then D = Int(Rnd * 2)
   If D = 1 Then Print "Which direction?": GoTo ActionLoop
 
@@ -330,16 +353,21 @@ MustFight:
   Print : Print "Which characteristic will you fight with?"
   Print "Your Magic is"; M(7); ", Strength is"; S(7)
   Print "and your Wisdom is"; W(7)
+
 ChooseCharacteristic:
   Print"Your choice (M/S/W)";
   Input ZSTR$
-  If UCase$(ZSTR$) <> "M" And UCase$(ZSTR$) <> "S" And UCase$(ZSTR$) <> "W" Then GoTo ChooseCharacteristic
+  If UCase$(ZSTR$) <> "M" And UCase$(ZSTR$) <> "S" And UCase$(ZSTR$) <> "W"   Then GoTo ChooseCharacteristic
   If UCase$(ZSTR$) = "M" Then HUM = M(7): MON = M(QV)
   If UCase$(ZSTR$) = "S" Then HUM = S(7): MON = S(QV)
   If UCase$(ZSTR$) = "W" Then HUM = W(7): MON = W(QV)
   DIFF = HUM - MON
-  While DIFF > 5 : DIFF = DIFF - 6 : Wend
-  While DIFF < -5 : DIFF = DIFF + 6 : Wend
+  Do
+    DIFF = DIFF - 6
+  Loop Until DIFF <= 5
+  Do
+    DIFF = DIFF + 6
+  Loop Until DIFF >= -5
   Print "The fight table for this melee reads "; DIFF
   COST = Abs(DIFF) + Int(Rnd * 6) + 1
   GoSub PauseRoutine
@@ -355,11 +383,11 @@ ChooseCharacteristic:
   GoSub FightEffects
   ROLL = Int(Rnd * 6) + 1
   VICTORY = 0
-  If (DIFF < 0 And ROLL > Abs(DIFF)) Or (DIFF > 0 And ROLL <= DIFF) Or (DIFF = 0 And ROLL < 4) Then VICTORY = 1
+  If (DIFF < 0 And ROLL > Abs(DIFF)) Or (DIFF > 0 And ROLL <= DIFF) Or (DIFF   = 0 And ROLL < 4) Then VICTORY = 1
   If VICTORY = 1 Then GoSub HumanVictory
   If VICTORY = 0 Then GoSub MonsterVictory
   GoSub PauseRoutine
-  GoSub PressAnyKey
+  GoSub PressEnter
   Print "After that fight, your"
   Print "attributes are:"
   Print "Magic:"; M(7)
@@ -378,17 +406,17 @@ HumanVictory:
   ' Human victory
   If QV = 0 Then D = 1
   Print : Print "You defeated the "; MSTR$(QV); "."
-  If UCase$(ZSTR$) = "M" Then M(7) = M(7) + COST: M(QV) = M(QV) - COST: If M(QV) < 1 Then M(QV) = 0
-  If UCase$(ZSTR$) = "W" Then W(7) = W(7) + COST: W(QV) = W(QV) - COST: If W(QV) < 1 Then W(QV) = 0
-  If UCase$(ZSTR$) = "S" Then S(7) = S(7) + COST: S(QV) = S(QV) - COST: If S(QV) < 1 Then S(QV) = 0
+  If UCase$(ZSTR$) = "M" Then M(7) = M(7) + COST: M(QV) = M(QV) - COST: If   M(QV) < 1 Then M(QV) = 0
+  If UCase$(ZSTR$) = "W" Then W(7) = W(7) + COST: W(QV) = W(QV) - COST: If   W(QV) < 1 Then W(QV) = 0
+  If UCase$(ZSTR$) = "S" Then S(7) = S(7) + COST: S(QV) = S(QV) - COST: If   S(QV) < 1 Then S(QV) = 0
   Return
 
 MonsterVictory:
   ' Monster victory
   Print : Print "The "; MSTR$(QV); " defeated you."
-  If UCase$(ZSTR$) = "M" Then M(QV) = M(QV) + COST: M(7) = M(7) - COST: If M(7) < 1 Then M(7) = 0
-  If UCase$(ZSTR$) = "W" Then W(QV) = W(QV) + COST: W(7) = W(7) - COST: If W(7) < 1 Then W(7) = 0
-  If UCase$(ZSTR$) = "S" Then S(QV) = S(QV) + COST: S(7) = S(7) - COST: If S(7) < 1 Then S(7) = 0
+  If UCase$(ZSTR$) = "M" Then M(QV) = M(QV) + COST: M(7) = M(7) - COST: If   M(7) < 1 Then M(7) = 0
+  If UCase$(ZSTR$) = "W" Then W(QV) = W(QV) + COST: W(7) = W(7) - COST: If   W(7) < 1 Then W(7) = 0
+  If UCase$(ZSTR$) = "S" Then S(QV) = S(QV) + COST: S(7) = S(7) - COST: If   S(7) < 1 Then S(7) = 0
   Return
 
 ' *****************
@@ -399,13 +427,21 @@ FightEffects:
       Case 1
         GoSub FightEffects
       Case 2
+        COLOR RGB(MAGENTA)
         Print "    Bash!!!!": GoSub ShortPause:
+        COLOR RGB(GREEN)
       Case 3
+        COLOR RGB(CYAN)
         Print , "Aaaaaarghhh!": GoSub ShortPause:
+        COLOR RGB(GREEN)
       Case 4
-        Print "Rip": For P = 1 To 100: Next P: Print , , "Tear!": GoSub ShortPause:
+        COLOR RGB(MAGENTA)
+        Print "Rip": For P = 1 To 100: Next P: Print , , "Tear!": GoSub   ShortPause:
+        COLOR RGB(GREEN)
       Case 5
+        COLOR RGB(YELLOW)
         Print "!*&&*@!!   ";: GoSub ShortPause:
+        COLOR RGB(GREEN)
     End Select
     Print
   Next J
@@ -422,7 +458,7 @@ Contents:
   B$(K) = LEFT$(B$(K), 8) + KSTR$ + MID$(B$(K), 10)
   B$(Z) = LEFT$(B$(Z), 8) + "0" + MID$(B$(Z), 10)
   If Rnd > .5 Then Return
-  GoSub PressAnyKey
+  GoSub PressEnter
   CT = Int(Rnd * 5) + 1
   Select Case CT
     Case 1: GoSub OpenChest
@@ -569,25 +605,25 @@ OpenSafe:
 GetYesNo:
   Print " (Y/N)"
   ZSTR$ = ""
-  While UCase$(ZSTR$) <> "N" And UCase$(ZSTR$) <> "Y"
+  Do
     ZSTR$ = Inkey$
-  Wend
+  Loop Until UCase$(ZSTR$) = "N" Or UCase$(ZSTR$) = "Y"
   Print : Return
 
 
 ' ******************
 CharDescription:
-  Print "Your character description:"
-  Print "Name:"; N$
+  COLOR RGB(YELLOW)
+  Print "Name: "; N$
   If M(7) > 0 Then Print "Magic:"; M(7)
   If S(7) > 0 Then Print "Strength:"; S(7)
   If W(7) > 0 Then Print "Wisdom:"; W(7)
   If MONEY > 0 Then Print "Wealth: $"; MONEY
+  COLOR RGB(GREEN)
   Return
 
 ' ******************
 RoomDescriptions:
-  ' Room descriptions
   Print
   Select Case Z
     Case 1: GoSub Room1
@@ -688,7 +724,7 @@ Room7:
   Print "Gallery, with a large painting"
   Print "of the Legendary Guardian of"
   Print "the Black Lagoon to the left of"
-  GoSub PressAnyKey
+  GoSub PressEnter
   Print "the window in the east wall. Through"
   Print "the window you can see the mullioned"
   Print "windows of the Great Hall across the"
@@ -704,7 +740,7 @@ Room8:
   Print "roof. You can leave it by the"
   Print "double doors to the north or by"
   Print "those to the east behind which"
-  GoSub PressAnyKey
+  GoSub PressEnter
   Print "you can hear music playing. "
   Print "Through the windows in the west"
   Print "wall, you can see the Contoured"
@@ -763,15 +799,18 @@ Initialise:
   POTION = 0
   SCROLL = 0
   SAFE = 0
-  Cls : Print "The Bannochburn Legacy" : Print "Created by Tim Hartnell"
+  Cls
+  COLOR RGB(MAGENTA)
+  Print "The Bannochburn Legacy"
+  Print "Created by Tim Hartnell"
+  COLOR RGB(GREEN)
   Print : Print "Find and defeat the Guardian"
   Print "of the Black Lagoon to free"
   Print "Bannochburn Castle of its curse." : Print
   Print "Commands: N, S, E, W to move"
   Print "F to fight, FL to flee, ? for help" : Print
   Input "Please enter your first name"; N$
-  Cls : Print "Hi there, "; N$
-  Print "Please stand by..."
+  Cls
 
   ' Fill rooms
   For T = 1 To 12
@@ -811,7 +850,7 @@ Initialise:
   Data "09000000", "00000000"
 
   ' Monster data
-  Data "Warlock", "Fearbringer", "Soulthreat", "Kneecrusher", "Wolvling", "Guardian"
+  Data "Warlock", "Fearbringer", "Soulthreat", "Kneecrusher", "Wolvling",         "Guardian"
   Return
 
 ' ***********************
@@ -850,14 +889,15 @@ ShowHelp:
 
 ' ***********************
 PauseRoutine:
-  Pause 600
+  Pause 1000
   Return
 
 ShortPause:
-  Pause 200
+  Pause 400
   Return
 
-PressAnyKey:
-  Print "(Press any key to continue...)"
-  While Inkey$ = "" : Wend
+PressEnter:
+  Print
+  Input "(Press Enter to continue...)", E$
+  Print
   Return
