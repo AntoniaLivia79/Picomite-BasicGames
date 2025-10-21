@@ -9,7 +9,6 @@ PRINT "DOG STAR"
 PRINT "by Lance Micklus,"
 PRINT "Winooski, Vt. 05404":PRINT:PRINT
 PRINT "Copyright 1979":PRINT
-PRINT "Press Enter To Start"
 GOSUB WaitForInput
 
 GOSUB InitializeGameData
@@ -136,7 +135,6 @@ HandleMovement:
   IF roomConnections(currentLocation,nounNumber-1)=0 THEN PRINT "I can't go that way!":GOTO RandomGuardEncounter
   GOSUB CheckMovementRestrictions
   GOTO ProcessMovement
-  RETURN
 
 CheckMovementRestrictions:
   IF flightDeckDoorsOpen AND roomConnections(currentLocation,nounNumber-1)>2 AND roomConnections(currentLocation,nounNumber-1)<6 THEN 
@@ -167,16 +165,19 @@ CheckCharismaDepletion:
 ' INVENTORY MANAGEMENT COMMANDS
 ' ===========================================
 HandleTakeItem:
+  Print "HandleTakeItem"
   IF nounNumber=0 THEN PRINT "I don't know what a ";CHR$(34);inputNoun$;CHR$(34);" is.":GOTO RandomGuardEncounter
   IF itemsCarried>5 THEN PRINT "I can't carry any more.":PRINT "HINT: Drop something.":GOTO RandomGuardEncounter
   GOTO FindObjectToTake
   RETURN
 
 FindObjectToTake:
+  Print "FindObjectToTake"
   FOR objectIndex=1 TO totalObjects:IF objectData(objectIndex,0)=nounNumber THEN GOTO ProcessTakeItem ELSE NEXT objectIndex
   GOTO UnknownCommand
 
 ProcessTakeItem:
+  Print "ProcessTakeItem"
   IF objectData(objectIndex,1)=-1 THEN PRINT "I'm already carrying it.":GOTO RandomGuardEncounter
   IF objectData(objectIndex,1)<>currentLocation THEN PRINT "I don't see it.":GOTO RandomGuardEncounter
   IF nounNumber=37 THEN HandleAmmunitionReload:RETURN
@@ -189,6 +190,7 @@ HandleAmmunitionReload:
   blasterAmmo=4:objectData(objectIndex,1)=0:PRINT "My BLASTER's reloaded.":GOTO RandomGuardEncounter
 
 ExecuteTakeAction:
+  Print "ExecuteTakeAction"
   itemsCarried=itemsCarried+1:objectData(objectIndex,1)=-1:PRINT "O.K."
   GOTO ProcessSpecialTakeEffects
   GOTO RandomGuardEncounter
@@ -224,7 +226,7 @@ HandleInventoryCommand:
   PRINT "I'm carrying:"
   hasItems=0:FOR objectIndex=1 TO totalObjects:IF objectData(objectIndex,1)=-1 THEN PRINT objectName$(objectIndex):hasItems=1:NEXT objectIndex
   IF hasItems=0 THEN PRINT "NOTHING"
-  PRINT:GOTO RandomGuardEncounter
+  PRINT:verbNumber=0:nounNumber=0:GOSUB WaitForInput:GOTO MainGameLoop
 
 ' ===========================================
 ' GAME STATE COMMANDS
@@ -459,7 +461,7 @@ HandleKillCommand:
 ' ===========================================
 UnknownCommand:
   PRINT "I don't know how to do that."
-  GOTO RandomGuardEncounter
+  PRINT:verbNumber=0:nounNumber=0:GOSUB WaitForInput:GOTO MainGameLoop
 
 NothingHappened:
   PRINT "Nothing happened."
@@ -538,7 +540,8 @@ CalculateScore:
   Return
 
 WaitForInput:
-  INPUT userResponse$
+  PRINT "(Press any key to continue)"
+  DO: LOOP WHILE INKEY$=""
   Return
 
 ' ===========================================
