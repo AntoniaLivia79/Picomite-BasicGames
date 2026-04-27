@@ -1,0 +1,85 @@
+GOBLINS
+=======
+
+SCENARIO
+--------
+You are an adventurer exploring a
+100-cell underground dungeon.
+Find the TREASURE hidden within,
+then reach the EXIT to escape!
+
+THE DUNGEON VIEW
+----------------
+The screen shows 21 cells centred
+on your position. Cells outside
+the dungeon are shown as X.
+
+  @  = You
+  .  = Empty space
+  l  = Loot
+  k  = Key
+  d  = Door
+  g  = Goblin
+  T  = TREASURE
+  E  = EXIT
+  X  = Wall / out of bounds
+
+Status bar below the view shows:
+  loot:X  keys:X  TREASURE:yes/no
+
+CONTROLS
+--------
+  a  Move left
+  d  Move right
+  q  Quit
+
+ITEMS AND ENCOUNTERS
+--------------------
+LOOT (l)
+  Walk onto loot to pick it up.
+  Your loot count increases by 1.
+  Goblins will steal one piece
+  to let you pass.
+
+KEY (k)
+  Walk onto a key to pick it up.
+  Your key count increases by 1.
+  Keys unlock locked Doors.
+  One key is used per door.
+
+DOOR (d)
+  Requires a key to pass.
+  You cannot pass without a key.
+
+GOBLIN (g)
+  Goblins block your path.
+  If you carry loot, the goblin
+  steals one piece and lets
+  you pass.
+  With no loot, you are blocked.
+
+TREASURE (T)
+  Walk onto the Treasure to
+  claim it. Status bar will
+  show TREASURE: YES.
+  You MUST collect the Treasure
+  before the Exit will open.
+
+EXIT (E)
+  The way out of the dungeon.
+  Sealed until you have the
+  Treasure. Walk onto it to WIN!
+
+WIN CONDITION
+-------------
+Collect the TREASURE (T) then
+reach the EXIT (E).
+
+TIPS
+----
+Collect loot early to help get
+  past goblins later.
+Gather keys before you need them
+  so you are not stuck at doors.
+The dungeon is 100 cells wide -
+  explore both directions!
