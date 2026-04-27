@@ -1,7 +1,6 @@
 ' Jumping Fallout - Picomite Version
 ' Original BASIC Game by Neal Cavalier-Smith
 
-MODE 2
 FONT 4
 
 COLOR RGB(GREEN)

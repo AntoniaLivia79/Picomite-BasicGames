@@ -1,7 +1,7 @@
 ' The Bannochburn Legacy - MMBasic Version
 ' Original BASIC Game by Tim Hartnell
 
-Mode 2
+FONT 4
 
 COLOR RGB(GREEN)
 
