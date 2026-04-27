@@ -1,8 +1,8 @@
 # The Picomite-BASIC Book of Computer Games
 
-A collection of classic BASIC games from 80's game compendium books and magazines, ported to Picomite Basic.
+A collection of classic BASIC games from 80's game compendium books and magazines, ported to Picomite Basic for the Picocalc.
 
-These are classic BASIC games ported to Picomite BASIC (running from an RP2350). They have not been tested on the PicoCalc, so may require tweaks to run on this device.
+These are classic BASIC games ported to Picomite BASIC (running from an RP2350).
 
 The original BASIC source code for some of these games was taken from https://github.com/chaosotter/basic-games.git.
 
@@ -14,3 +14,5 @@ The Bannochburn Legacy (`bannoch.bas`) - Tim Hartnell's Giant Book of Computer G
 (game written by Tim Hartnell)
 
 Dogstar - Lance Micklus (ported from TRS80 BASIC)
+
+Goblins - Based on the Goblins type-in zine : Https://permacomputer.solarpunk.au
