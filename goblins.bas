@@ -159,8 +159,14 @@ collide:
   Return
 
 place:
+  tries = 0
   Do
     pi = Int(Rnd * 100)
+    tries = tries + 1
+    If tries > 1000 Then
+      msg$ = "place failed: no empty cells"
+      Return
+    EndIf
   Loop While w(pi) <> T_EMPTY Or pi = p
   w(pi) = ptile
   Return
