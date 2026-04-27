@@ -28,6 +28,9 @@ Const T_GOBLIN  = 5
 Const T_TREASURE = 6
 Const T_EXIT    = 7
 
+' placement safety limit
+Const MAX_PLACE_TRIES = 1000
+
 Randomize Timer
 Cls BG
 
@@ -159,11 +162,11 @@ collide:
   Return
 
 place:
-  tries = 0
+  placeTries = 0
   Do
     pi = Int(Rnd * 100)
-    tries = tries + 1
-    If tries > 1000 Then
+    placeTries = placeTries + 1
+    If placeTries > MAX_PLACE_TRIES Then
       msg$ = "place failed: no empty cells"
       Return
     EndIf
