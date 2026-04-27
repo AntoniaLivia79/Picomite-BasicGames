@@ -13,4 +13,4 @@ Jumping Fallout (`fallout.bas`) - Tim Hartnell's Second Giant Book of Computer G
 The Bannochburn Legacy (`bannoch.bas`) - Tim Hartnell's Giant Book of Computer Games
 (game written by Tim Hartnell)
 
-Dogstar - Lance Micklus (this port from TRS80 Basic is only partially working and is in development)
+Dogstar - Lance Micklus (ported from TRS80 BASIC)
