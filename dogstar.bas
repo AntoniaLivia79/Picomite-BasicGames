@@ -21,7 +21,7 @@ GOTO MainGameLoop
 InitializeGameVariables:
   currentLocation=2:screenLineLength=64:blasterAmmo=4:guardFrequency=50:randomValue=16396
   turnCounter=0:tractorBeamOn=0:communicatorFound=0:flightDeckDoorsOpen=0
-  hamburgerSpoilTime=0:doorUnlocked=0:itemsCarried=0
+  hamburgerSpoilTime=0:doorUnlocked=0:itemsCarried=0:stepsTaken=0
 Return
 
 ' ===========================================
@@ -157,7 +157,7 @@ ProcessMovement:
   GOTO MainGameLoop
 
 CheckCharismaDepletion:
-  itemsCarried=itemsCarried+1:IF itemsCarried=25 THEN GOTO GameOver
+  stepsTaken=stepsTaken+1:IF stepsTaken=25 THEN GOTO GameOver
   RETURN
 
 ' ===========================================
@@ -248,7 +248,7 @@ HandleSaveToFile:
 
 SaveGameData:
   FOR objectIndex=0 TO totalObjects:PRINT #1,objectData(objectIndex,0);objectData(objectIndex,1);objectData(objectIndex,2):NEXT objectIndex
-  PRINT #1,tractorBeamOn;turnCounter;communicatorFound;flightDeckDoorsOpen;blasterAmmo;hamburgerSpoilTime;guardFrequency;doorUnlocked;itemsCarried;currentLocation
+  PRINT #1,tractorBeamOn;turnCounter;communicatorFound;flightDeckDoorsOpen;blasterAmmo;hamburgerSpoilTime;guardFrequency;doorUnlocked;itemsCarried;stepsTaken;currentLocation
   CLOSE:PRINT "O.K.":GOTO RandomGuardEncounter
 
 HandleLoadCommand:
@@ -261,7 +261,7 @@ HandleLoadFromFile:
 
 LoadGameData:
   FOR objectIndex=0 TO totalObjects:INPUT #1,objectData(objectIndex,0),objectData(objectIndex,1),objectData(objectIndex,2):NEXT objectIndex
-  INPUT #1,tractorBeamOn,turnCounter,communicatorFound,flightDeckDoorsOpen,blasterAmmo,hamburgerSpoilTime,guardFrequency,doorUnlocked,itemsCarried,currentLocation
+  INPUT #1,tractorBeamOn,turnCounter,communicatorFound,flightDeckDoorsOpen,blasterAmmo,hamburgerSpoilTime,guardFrequency,doorUnlocked,itemsCarried,stepsTaken,currentLocation
   CLOSE:GOTO MainGameLoop
 
 ' ===========================================
