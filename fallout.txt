@@ -1,0 +1,74 @@
+JUMPING FALLOUT
+===============
+A game by Neal Cavalier-Smith
+
+SCENARIO
+--------
+A 9x9 grid is partially filled
+with # obstacles. Nine digits
+are waiting in the left column.
+Your job is to shuffle rows so
+the digits can fall through gaps
+to the bottom and drop out.
+
+Get all 9 digits to fall out
+using as few moves as possible
+to keep a high score.
+
+THE GRID
+--------
+The grid has 9 columns and 9 rows.
+
+  #        = An obstacle
+  1 to 9   = Falling digits
+  (space)  = Empty space
+
+Digits fall DOWN through empty
+spaces but are stopped by #.
+When a digit falls off the
+bottom edge it is counted out.
+
+HOW TO PLAY
+-----------
+Each turn you are asked:
+
+  LEVEL TO MOVE (1-8)
+    Enter a row number to rotate.
+
+  MOVES TO THE LEFT
+    Enter how many steps to shift
+    the row to the left. Cells
+    that fall off the left edge
+    wrap around to the right.
+
+After each move, digits fall
+through any new spaces created.
+
+SCORING
+-------
+You start with 200 points.
+Each move costs points:
+  cost = row number + steps moved
+
+Moving lower rows costs more.
+Try to clear all digits with
+as few moves as possible!
+
+WIN CONDITION
+-------------
+Get all 9 digits to fall out
+of the bottom of the grid.
+Your final score is displayed.
+Beat the current best to set
+a new high score!
+
+TIPS
+----
+Look for columns with gaps near
+  the bottom already.
+Move higher rows first - they
+  cost fewer points.
+Each column has at least one
+  gap somewhere - find them!
+One good shift can open a path
+  for several digits at once.
