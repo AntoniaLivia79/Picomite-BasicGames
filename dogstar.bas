@@ -31,7 +31,6 @@ MainGameLoop:
   CLS
   PRINT roomDescription$(currentLocation):displayString$=""
   IF currentLocation=35 THEN guardFrequency=10
-  IF currentLocation=7 THEN GOSUB DisplayRoomContents
   GOSUB DisplayRoomContents
   GOSUB DisplayDirections
   GOSUB GetPlayerCommand
@@ -165,19 +164,16 @@ CheckCharismaDepletion:
 ' INVENTORY MANAGEMENT COMMANDS
 ' ===========================================
 HandleTakeItem:
-  Print "HandleTakeItem"
   IF nounNumber=0 THEN PRINT "I don't know what a ";CHR$(34);inputNoun$;CHR$(34);" is.":GOTO RandomGuardEncounter
   IF itemsCarried>5 THEN PRINT "I can't carry any more.":PRINT "HINT: Drop something.":GOTO RandomGuardEncounter
   GOTO FindObjectToTake
   RETURN
 
 FindObjectToTake:
-  Print "FindObjectToTake"
   FOR objectIndex=1 TO totalObjects:IF objectData(objectIndex,0)=nounNumber THEN GOTO ProcessTakeItem ELSE NEXT objectIndex
   GOTO UnknownCommand
 
 ProcessTakeItem:
-  Print "ProcessTakeItem"
   IF objectData(objectIndex,1)=-1 THEN PRINT "I'm already carrying it.":GOTO RandomGuardEncounter
   IF objectData(objectIndex,1)<>currentLocation THEN PRINT "I don't see it.":GOTO RandomGuardEncounter
   IF nounNumber=37 THEN HandleAmmunitionReload:RETURN
@@ -190,7 +186,6 @@ HandleAmmunitionReload:
   blasterAmmo=4:objectData(objectIndex,1)=0:PRINT "My BLASTER's reloaded.":GOTO RandomGuardEncounter
 
 ExecuteTakeAction:
-  Print "ExecuteTakeAction"
   itemsCarried=itemsCarried+1:objectData(objectIndex,1)=-1:PRINT "O.K."
   GOTO ProcessSpecialTakeEffects
   GOTO RandomGuardEncounter
@@ -205,13 +200,12 @@ ProcessSpecialTakeEffects:
 HandleDropCommand:
   IF nounNumber=0 THEN GOTO HandleTakeItem
   IF currentLocation=2 THEN PRINT "There's no room here.":GOTO RandomGuardEncounter
-  GOTO CheckRoomCapacity
+  GOSUB CheckRoomCapacity
   GOTO FindObjectToDrop
-  RETURN
 
 CheckRoomCapacity:
   roomItemCount=0:FOR objectIndex=1 TO totalObjects:IF objectData(objectIndex,1)=currentLocation THEN roomItemCount=roomItemCount+1:NEXT objectIndex
-  IF roomItemCount>12 THEN PRINT "There not enough room. Get rid of something.":GOTO RandomGuardEncounter
+  IF roomItemCount>12 THEN PRINT "There's not enough room. Get rid of something.":GOTO RandomGuardEncounter
   RETURN
 
 FindObjectToDrop:
@@ -371,7 +365,7 @@ ProcessMapReading:
 
 HandleEatCommand:
   IF nounNumber=0 THEN PRINT "What's a ";inputNoun$;"?":GOTO RandomGuardEncounter
-  IF nounNumber<>22 THEN PRINT "Don't be rediculous.":GOTO RandomGuardEncounter
+  IF nounNumber<>22 THEN PRINT "Don't be ridiculous.":GOTO RandomGuardEncounter
   GOTO ProcessEatHamburger
   RETURN
 
@@ -493,6 +487,7 @@ ParseCommand:
   verbNumber=0
   nounNumber=0
   IF LEN(commandString$)=0 THEN GOSUB GetPlayerCommand
+  commandString$=UCASE$(commandString$)
   GOSUB ExtractVerb
   GOSUB ProcessVerbMatch
   GOSUB ExtractNoun
@@ -590,7 +585,7 @@ InitializeGameData:
 InitializeVerbs:
   verbList$(1)="GO":verbList$(2)="GET":verbList$(3)="LOOK":verbList$(4)="INVEN":verbList$(5)="SCORE":verbList$(6)="DROP"
   verbList$(7)="HELP":verbList$(8)="SAVE":verbList$(9)="LOAD":verbList$(10)="QUIT":verbList$(11)="PRESS":verbList$(12)="SHOOT"
-  verbList$(13)="SAY":verbList$(14)="read":verbList$(15)="EAT":verbList$(16)="CSAVE":verbList$(17)="SHOW":verbList$(18)="OPEN"
+  verbList$(13)="SAY":verbList$(14)="READ":verbList$(15)="EAT":verbList$(16)="CSAVE":verbList$(17)="SHOW":verbList$(18)="OPEN"
   verbList$(19)="FEED":verbList$(20)="HIT":verbList$(21)="KILL"
   Return
 
@@ -613,7 +608,7 @@ InitializeRoomDescriptions:
   roomDescription$(5)="I'm out on the flight deck of General Doom's Battle Cruiser."
   roomDescription$(6)="I'm in a hallway. There are doors on all sides. The door to the north says >> CLOSED FOR THE DAY <<"
   roomDescription$(7)="I'm in the SUPPLY DEPOT. around me I see all kinds of things"
-  roomDescription$(8)="I'm at the end of one of the hallways. I can here voices nearby. Sounds like guards."
+  roomDescription$(8)="I'm at the end of one of the hallways. I can hear voices nearby. Sounds like guards."
   roomDescription$(9)="I'm in the STRATEGY PLANNING room."
   roomDescription$(10)="I'm in the DECONTAMINATION area."
   roomDescription$(11)="This area is the tractor beam control room. A large sign warns >> DO NOT PRESS ANY BUTTONS <<"
@@ -630,7 +625,7 @@ InitializeRoomDescriptions:
   roomDescription$(22)="I'm lost!"
   roomDescription$(23)="I'm in a research lab."
   roomDescription$(24)="I'm in a research lab."
-  roomDescription$(25)="I'm near the entrance to the vault. A sign here says >> AUTHORIZED PERSONEL ONLY <<"
+  roomDescription$(25)="I'm near the entrance to the vault. A sign here says >> AUTHORIZED PERSONNEL ONLY <<"
   roomDescription$(26)="I'm in the vault."
   roomDescription$(27)="I'm in a pipe tunnel which leads in every direction."
   roomDescription$(28)="I'm in a pipe tunnel which leads in every direction."
