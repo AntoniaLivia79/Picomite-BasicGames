@@ -101,11 +101,8 @@ draw:
   Next x
   Print
   Colour YELLOW, BG
-  If tf = 1 Then
-    Print "loot:" + Str$(l) + " keys:" + Str$(k) + " TREASURE:YES"
-  Else
-    Print "loot:" + Str$(l) + " keys:" + Str$(k) + " TREASURE:no"
-  EndIf
+  If tf = 1 Then ts$ = "YES" Else ts$ = "no"
+  Print "loot:" + Str$(l) + " keys:" + Str$(k) + " TREASURE:" + ts$
   Colour LIGHTRED, BG
   Print msg$
   msg$ = ""
