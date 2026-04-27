@@ -253,8 +253,8 @@ UltimateTest:
   Do
     DIFF = DIFF + 6
   Loop Until DIFF >= -5
+  GoSub FightEffects  ' animate fight before revealing result (consistent with magic/strength rounds)
   GoSub MeleeResolution
-  GoSub FightEffects
   If VICTORY = 1 Then
     W(7) = W(7) + COST
     Print "And you defeated the Guardian!"
@@ -453,7 +453,7 @@ Contents:
   ' Contents
   K = 2 + Int(Rnd * 8)
   If K = Z Then GoTo Contents
-  If Mid$(B$(Z), 9, 1) <> "0" Then Return
+  If Mid$(B$(Z), 9, 1) = "0" Then Return  ' no monster here, nothing to move
   KSTR$ = Mid$(B$(Z), 9, 1)
   B$(K) = LEFT$(B$(K), 8) + KSTR$ + MID$(B$(K), 10)
   B$(Z) = LEFT$(B$(Z), 8) + "0" + MID$(B$(Z), 10)
@@ -492,6 +492,8 @@ OpenChest:
   If J = 1 Then
     Print "A goblin leaps out, stabbing you!" : Print
     LOSS = Int(Rnd * 6) + 1
+    S(7) = S(7) - LOSS  ' apply stab damage to strength
+    If S(7) < 1 Then S(7) = 0
     MONEY = MONEY - Int(Rnd * 200)
     If MONEY < 1 Then MONEY = 0
     GoSub PauseRoutine
@@ -596,7 +598,7 @@ OpenSafe:
     Print "You grapple with it, and..."
     GoSub PauseRoutine
     Print "...finally wring its neck."
-    S(7) = S(7) - Int(Rnd * 6) + 1
+    S(7) = S(7) - (Int(Rnd * 6) + 1)  ' brackets needed: subtract 1-6, not subtract then add 1
     If S(7) < 1 Then S(7) = 0
     GoSub PauseRoutine
     Return
