@@ -32,7 +32,7 @@ Const T_EXIT    = 7
 Const MAX_PLACE_TRIES = 1000
 
 Randomize Timer
-Cls BG
+CLS BG
 
 ' player position
 p = Int(Rnd * 100)
@@ -78,7 +78,7 @@ main:
   GoTo main
 
 draw:
-  Cls BG
+  CLS BG
   ' viewport: 21 cells (-10..+10) fits in 40 cols
   For x = -10 To 10
     c = p + x
@@ -143,7 +143,7 @@ collide:
     msg$ = "TREASURE found! Reach the EXIT!"
   ElseIf w(p) = T_EXIT Then
     If tf = 1 Then
-      Cls BG
+      CLS BG
       Colour YELLOW, BG
       Print
       Print "  *** YOU WIN! ***"
@@ -164,12 +164,12 @@ collide:
 place:
   placeTries = 0
   Do
-    pi = Int(Rnd * 100)
+    pr = Int(Rnd * 100)
     placeTries = placeTries + 1
     If placeTries > MAX_PLACE_TRIES Then
       msg$ = "place failed: no empty cells"
       Return
     EndIf
-  Loop While w(pi) <> T_EMPTY Or pi = p
-  w(pi) = ptile
+  Loop While w(pr) <> T_EMPTY Or pr = p
+  w(pr) = ptile
   Return
