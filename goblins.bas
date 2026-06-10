@@ -3,6 +3,7 @@
 ' goal: find TREASURE then reach EXIT
 
 Option Base 0
+FONT 4
 Dim w(99)
 
 ' colour constants (rgb888 for picomite)
@@ -28,28 +29,123 @@ Const T_GOBLIN  = 5
 Const T_TREASURE = 6
 Const T_EXIT    = 7
 
-' placement safety limit
-Const MAX_PLACE_TRIES = 1000
-
 Randomize Timer
 CLS BG
 
 ' player position
-p = Int(Rnd * 100)
+p = 50
 op = p
-l = 0 : k = 0 : tf = 0
+l = 0
+k = 0
+tf = 0
 msg$ = ""
 
 ' init world
-For i = 0 To 99 : w(i) = T_EMPTY : Next i
+For i = 0 To 99
+  w(i) = T_EMPTY
+Next i
 
-' place items one at a time on empty cells
-ptile = T_LOOT     : For i = 1 To 10 : GoSub place : Next i
-ptile = T_KEY      : For i = 1 To 3  : GoSub place : Next i
-ptile = T_DOOR     : For i = 1 To 3  : GoSub place : Next i
-ptile = T_GOBLIN   : For i = 1 To 5  : GoSub place : Next i
-ptile = T_TREASURE : GoSub place
-ptile = T_EXIT     : GoSub place
+
+' place door/key pairs outward from center
+minStep = 1
+maxStep = 12
+maxPairs = 3
+cum = 0
+For i = 1 To maxPairs
+  stepVal = Int(Rnd * (maxStep - minStep + 1)) + minStep
+  cum = cum + stepVal
+  leftIdx = p - cum
+  rightIdx = p + cum
+  If leftIdx < 0 Or rightIdx > 99 Then Exit For
+  If w(leftIdx) <> T_EMPTY Or w(rightIdx) <> T_EMPTY Then Exit For
+  If Rnd < 0.5 Then
+    w(leftIdx) = T_DOOR
+    w(rightIdx) = T_KEY
+  Else
+    w(leftIdx) = T_KEY
+    w(rightIdx) = T_DOOR
+  EndIf
+Next i
+
+' place EXIT strictly at start or end
+If Rnd < 0.5 Then
+  exitIdx = 0
+Else
+  exitIdx = 99
+EndIf
+If w(exitIdx) = T_EMPTY Or w(exitIdx) = T_LOOT Then
+  w(exitIdx) = T_EXIT
+Else
+  otherEnd = 99
+  If exitIdx = 99 Then otherEnd = 0
+  If w(otherEnd) = T_EMPTY Or w(otherEnd) = T_LOOT Then
+    w(otherEnd) = T_EXIT
+  Else
+    If w(exitIdx) <> T_PLAYER Then
+      If w(exitIdx) <> T_TREASURE Then
+        w(exitIdx) = T_EXIT
+      EndIf
+    EndIf
+  EndIf
+EndIf
+
+' place TREASURE (prefer along EXIT side beyond outermost door)
+placedT = 0
+If exitIdx = 0 Then
+  leftMostDoor = -1
+  For j = p - 1 To 0 Step -1
+    If w(j) = T_DOOR Then
+      leftMostDoor = j
+      Exit For
+    EndIf
+  Next j
+  target = p - 1
+  If leftMostDoor <> -1 Then target = leftMostDoor - 1
+  If target >= 1 Then
+    If w(target) = T_EMPTY Then
+      w(target) = T_TREASURE
+      placedT = 1
+    EndIf
+  EndIf
+Else
+  rightMostDoor = -1
+  For j = p + 1 To 99
+    If w(j) = T_DOOR Then
+      rightMostDoor = j
+      Exit For
+    EndIf
+  Next j
+  target = p + 1
+  If rightMostDoor <> -1 Then target = rightMostDoor + 1
+  If target <= 98 Then
+    If w(target) = T_EMPTY Then
+      w(target) = T_TREASURE
+      placedT = 1
+    EndIf
+  EndIf
+EndIf
+If placedT = 0 Then
+  For j = 1 To 98
+    If j <> p Then
+      If w(j) = T_EMPTY Then
+        w(j) = T_TREASURE
+        placedT = 1
+        Exit For
+      EndIf
+    EndIf
+  Next j
+EndIf
+
+' place remaining loot and goblins
+ptile = T_LOOT
+For i = 1 To 8
+  GoSub place
+Next i
+ptile = T_GOBLIN
+For i = 1 To 5
+  GoSub place
+Next i
+
 w(p) = T_PLAYER
 
 ' tile legend:
@@ -59,18 +155,24 @@ w(p) = T_PLAYER
 main:
   GoSub draw
   Do
-    a$ = Inkey$
+    a$ = UCase$(Inkey$)
   Loop While a$ = ""
 
-  If a$ = "a" Or a$ = "A" Then
+  If a$ = "A" Then
     If p > 0 Then
-      op = p : w(p) = T_EMPTY : p = p - 1 : GoSub collide
+      op = p
+      w(p) = T_EMPTY
+      p = p - 1
+      GoSub collide
     EndIf
-  ElseIf a$ = "d" Or a$ = "D" Then
+  ElseIf a$ = "D" Then
     If p < 99 Then
-      op = p : w(p) = T_EMPTY : p = p + 1 : GoSub collide
+      op = p
+      w(p) = T_EMPTY
+      p = p + 1
+      GoSub collide
     EndIf
-  ElseIf a$ = "q" Or a$ = "Q" Then
+  ElseIf a$ = "Q" Then
     Colour GREEN, BG
     Print "bye!"
     End
@@ -83,23 +185,32 @@ draw:
   For x = -10 To 10
     c = p + x
     If c < 0 Or c > 99 Then
-      Colour RED, BG      : Print "X";
+      Colour RED, BG
+      Print "X";
     ElseIf w(c) = T_EMPTY Then
-      Colour DARK, BG     : Print ".";
+      Colour DARK, BG
+      Print ".";
     ElseIf w(c) = T_PLAYER Then
-      Colour BLUE, BG     : Print "@";
+      Colour BLUE, BG
+      Print "@";
     ElseIf w(c) = T_LOOT Then
-      Colour YELLOW, BG   : Print "l";
+      Colour YELLOW, BG
+      Print "l";
     ElseIf w(c) = T_KEY Then
-      Colour RED, BG      : Print "k";
+      Colour RED, BG
+      Print "k";
     ElseIf w(c) = T_DOOR Then
-      Colour BROWN, BG    : Print "d";
+      Colour BROWN, BG
+      Print "d";
     ElseIf w(c) = T_GOBLIN Then
-      Colour GREEN, BG    : Print "g";
+      Colour GREEN, BG
+      Print "g";
     ElseIf w(c) = T_TREASURE Then
-      Colour PURPLE, BG   : Print "T";
+      Colour PURPLE, BG
+      Print "T";
     ElseIf w(c) = T_EXIT Then
-      Colour CYAN, BG     : Print "E";
+      Colour CYAN, BG
+      Print "E";
     EndIf
   Next x
   Print
@@ -111,6 +222,11 @@ draw:
   msg$ = ""
   Colour WHITE, BG
   Print "a=left  d=right  q=quit"
+  Return
+
+bumpback:
+  p = op
+  w(p) = T_PLAYER
   Return
 
 collide:
@@ -127,7 +243,7 @@ collide:
       k = k - 1 : w(p) = T_PLAYER
       msg$ = "Door opened!"
     Else
-      p = op : w(p) = T_PLAYER
+      GoSub bumpback
       msg$ = "No key! Door is locked."
     EndIf
   ElseIf w(p) = T_GOBLIN Then
@@ -135,7 +251,7 @@ collide:
       l = l - 1 : w(p) = T_PLAYER
       msg$ = "A goblin stole your loot!"
     Else
-      p = op : w(p) = T_PLAYER
+      GoSub bumpback
       msg$ = "Goblin blocks you! (no loot)"
     EndIf
   ElseIf w(p) = T_TREASURE Then
@@ -155,7 +271,7 @@ collide:
       Print "  loot: " + Str$(l) + "   keys: " + Str$(k)
       End
     Else
-      p = op : w(p) = T_PLAYER
+      GoSub bumpback
       msg$ = "Exit sealed! Find TREASURE first."
     EndIf
   EndIf
@@ -165,11 +281,7 @@ place:
   placeTries = 0
   Do
     pr = Int(Rnd * 100)
-    placeTries = placeTries + 1
-    If placeTries > MAX_PLACE_TRIES Then
-      msg$ = "place failed: no empty cells"
-      Return
-    EndIf
+    placeTries = placeTries + 1 
   Loop While w(pr) <> T_EMPTY Or pr = p
   w(pr) = ptile
   Return
