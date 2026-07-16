@@ -14,5 +14,3 @@ The Bannochburn Legacy (`bannoch.bas`) - Tim Hartnell's Giant Book of Computer G
 (game written by Tim Hartnell)
 
 Dogstar - Lance Micklus (ported from TRS80 BASIC)
-
-Goblins - Based on the Goblins type-in zine : Https://permacomputer.solarpunk.au

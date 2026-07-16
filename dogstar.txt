@@ -29,6 +29,7 @@ Type two-word commands:
   LOOK             or L
   INVENTORY        or I
   HELP             or H
+  COMMANDS         or ?
 
 Other commands:
   GET [item]    DROP [item]
@@ -54,7 +55,7 @@ to free up space.
 
 GUARDS
 ------
-After 25 turns, armed guards
+After a while, armed guards
 may appear at any time!
 When a guard appears you must:
 
