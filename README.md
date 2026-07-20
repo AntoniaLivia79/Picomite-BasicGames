@@ -20,3 +20,7 @@ Dogstar (`dogstar.bas`) - Lance Micklus (ported from TRS80 BASIC) listed in Soft
 
 Pirate Adventure (`pirate.bas`) - Scott and Alexis Adams (ported from BBC BASIC port of the TRS80 BASIC source) listed in Byte Magazine December 1980. BBC port https://github.com/ahope1/Beeb-Pirate-Adventure.
 (in Pirate Adventure all input needs to be in uppercase)
+
+Adventureland ('adventure.bas) - Scott Adams (ported from BBC BASIC port of the TRS80 BASIC source) listed in Softside Magazine July 1980.
+(in Adventureland all input needs to be in uppercase)
+
