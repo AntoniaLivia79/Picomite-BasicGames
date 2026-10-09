@@ -24,3 +24,5 @@ Pirate Adventure (`pirate.bas`) - Scott and Alexis Adams (ported from BBC BASIC 
 Adventureland ('adventure.bas) - Scott Adams (ported from BBC BASIC port of the TRS80 BASIC source) listed in Softside Magazine July 1980.
 (in Adventureland all input needs to be in uppercase)
 
+Wizard's Castle ('castle.bas) - Joseph R. Power (ported from MBASIC port of the Exidy Sorcerer BASIC source) listed in Recreational Computing Magazine July/ August 1980
+
